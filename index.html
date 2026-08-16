@@ -1,11 +1,436 @@
 <!DOCTYPE html>
 <html lang="te">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ఉచితంగా Stock Market నేర్చుకోండి | Telugu Stock Community</title>
-  <meta name="description" content="తెలుగులో Stock Market Analysis, Price Action, Risk Management నేర్చుకోండి. 100% Free Telegram Community.">
-  <link rel="shortcut icon" href="images/favicon.png" type="image/png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Learn Skills with Trader Munaaf - నైపుణ్య అభివృద్ధి</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Hind:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #00ff88;
+    --green-dim: #00c466;
+    --red: #ff3355;
+    --red-dim: #cc2244;
+    --blue: #00aaff;
+    --gold: #ffcc00;
+    --bg: #080c10;
+    --bg2: #0d1318;
+    --bg3: #111820;
+    --border: rgba(0,255,136,0.12);
+    --border2: rgba(255,255,255,0.06);
+    --text: #e8eef4;
+    --muted: rgba(232,238,244,0.4);
+    --font-mono: 'Share Tech Mono', monospace;
+    --font-display: 'Orbitron', sans-serif;
+    --font-body: 'Hind', 'DM Sans', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0;
+  }
+
+  .ticker-wrap {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 32px;
+    background: #0a1208;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+  }
+  .ticker-inner {
+    display: flex;
+    gap: 0;
+    animation: ticker-scroll 30s linear infinite;
+    white-space: nowrap;
+  }
+  .ticker-item {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 0 20px;
+    border-right: 1px solid rgba(0,255,136,0.1);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ticker-sym { color: var(--text); font-weight: 600; }
+  .ticker-val { color: var(--green); }
+  .ticker-val.down { color: var(--red); }
+  .ticker-chg { font-size: 10px; opacity: 0.7; }
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .status-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 24px;
+    background: #0a1208;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 100;
+  }
+  .status-bar span {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .status-bar .online { color: var(--green); }
+
+  .chart-bg {
+    position: fixed;
+    bottom: 24px; left: 0; right: 0;
+    height: 200px;
+    z-index: 0;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
+  .main {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    padding: 52px 16px 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 440px;
+  }
+
+  .panel {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--green), var(--blue), var(--green));
+    background-size: 200% 100%;
+    animation: gradient-shift 3s linear infinite;
+  }
+  @keyframes gradient-shift {
+    from { background-position: 0% 0%; }
+    to { background-position: 200% 0%; }
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: #0a1510;
+    border-bottom: 1px solid var(--border);
+  }
+  .panel-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .panel-controls { display: flex; gap: 6px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-r { background: var(--red); }
+  .dot-y { background: var(--gold); }
+  .dot-g { background: var(--green); }
+
+  .profile-block {
+    padding: 20px;
+    border-bottom: 1px solid var(--border2);
+  }
+  .profile-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 4px;
+    border: 1px solid var(--green);
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+    background: #0a1510;
+    box-shadow: 0 0 20px rgba(0,255,136,0.15), inset 0 0 20px rgba(0,255,136,0.05);
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .avatar-corner {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 16px; height: 16px;
+    border-top: 1px solid var(--green);
+    border-left: 1px solid var(--green);
+  }
+  .profile-meta { flex: 1; }
+  .trader-name {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 900;
+    color: var(--text);
+    letter-spacing: 1.5px;
+    line-height: 1.15;
+    margin-bottom: 4px;
+  }
+  .trader-name span { color: var(--green); }
+  .trader-sub {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .tag-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 2px;
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
+  .tag-green {
+    background: rgba(0,255,136,0.1);
+    color: var(--green);
+    border: 1px solid rgba(0,255,136,0.2);
+  }
+  .tag-blue {
+    background: rgba(0,170,255,0.1);
+    color: var(--blue);
+    border: 1px solid rgba(0,170,255,0.2);
+  }
+  .tag-red {
+    background: rgba(255,51,85,0.1);
+    color: var(--red);
+    border: 1px solid rgba(255,51,85,0.2);
+    display: flex; align-items: center; gap: 4px;
+  }
+  .blink-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: blink 1s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-bottom: 1px solid var(--border2);
+  }
+  .stat-cell {
+    padding: 12px;
+    text-align: center;
+    border-right: 1px solid var(--border2);
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-val {
+    font-family: var(--font-mono);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--green);
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+  .stat-val.gold { color: var(--gold); }
+  .stat-label {
+    font-family: var(--font-body);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.3px;
+  }
+
+  .chart-section {
+    padding: 14px;
+    border-bottom: 1px solid var(--border2);
+    background: rgba(0,0,0,0.2);
+  }
+  .chart-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .chart-label .up { color: var(--green); }
+  .candle-chart { display: flex; align-items: flex-end; gap: 3px; height: 60px; }
+  .candle { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+  .wick { width: 1px; background: currentColor; opacity: 0.5; }
+  .body { width: 70%; border-radius: 1px; }
+  .candle.bull { color: var(--green); }
+  .candle.bear { color: var(--red); }
+  .candle.bull .body { background: var(--green); }
+  .candle.bear .body { background: var(--red); }
+
+  .features {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border-bottom: 1px solid var(--border2);
+  }
+  .feat-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 3px;
+    transition: all 0.2s;
+  }
+  .feat-row:hover {
+    border-color: rgba(0,255,136,0.25);
+    background: rgba(0,255,136,0.04);
+    transform: translateX(2px);
+  }
+  .feat-icon {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(0,255,136,0.2);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,255,136,0.06);
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+  .feat-text p {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 1px;
+  }
+  .feat-text span {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    color: var(--muted);
+  }
+  .feat-arrow {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: rgba(0,255,136,0.3);
+  }
+
+  .cta-block { padding: 14px; }
+  .cta-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 16px;
+    background: transparent;
+    border: 1px solid var(--green);
+    border-radius: 3px;
+    color: var(--green);
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+  .cta-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--green);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 0;
+  }
+  .cta-btn:hover::before { transform: translateX(0); }
+  .cta-btn:hover { color: #000; box-shadow: 0 0 30px rgba(0,255,136,0.3); }
+  .cta-btn span, .cta-btn svg { position: relative; z-index: 1; }
+  .cta-btn .cmd-prefix { font-family: var(--font-mono); font-size: 12px; opacity: 0.6; }
+  .cta-note {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--muted);
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .footer-bar {
+    padding: 10px 14px;
+    background: #060a08;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .footer-bar p { font-family: var(--font-mono); font-size: 8.5px; color: rgba(255,255,255,0.2); }
+  .footer-bar .credit { color: rgba(0,255,136,0.4); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .a1 { animation: fadeUp 0.5s 0.0s both; }
+  .a2 { animation: fadeUp 0.5s 0.1s both; }
+  .a3 { animation: fadeUp 0.5s 0.2s both; }
+  .a4 { animation: fadeUp 0.5s 0.3s both; }
+  .a5 { animation: fadeUp 0.5s 0.4s both; }
+
+  @media (max-width: 480px) {
+    .trader-name { font-size: 15px; }
+    .stat-val { font-size: 14px; }
+  }
+</style>
 
 <!-- Meta Pixel Code -->
 <script>
@@ -24,552 +449,231 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=1569893814512144&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
-
-  <style>
-    :root {
-      --bg-dark: #070d1e;
-      --bg-card: rgba(255, 255, 255, 0.04);
-      --gold-accent: #ffb703;
-      --gold-glow: rgba(255, 183, 3, 0.3);
-      --sky-blue: #00b4d8;
-      --text-white: #ffffff;
-      --text-gray: #d1d5db;
-      --text-telugu: #e2e8f0;
-      /* Native System Fonts - Zero Network Delay */
-      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    body {
-      font-family: var(--font-family);
-      background-color: var(--bg-dark);
-      color: var(--text-white);
-      line-height: 1.5;
-      overflow-x: hidden;
-    }
-
-    .container {
-      width: 90%;
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 15px 0;
-    }
-
-    #scroll-progress {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 3px;
-      background: linear-gradient(to right, var(--sky-blue), var(--gold-accent));
-      width: 0%;
-      z-index: 9999;
-    }
-
-    /* Hero Section */
-    .hero-section {
-      text-align: center;
-      padding: 40px 0 25px;
-      background: radial-gradient(circle at top, #152244 0%, var(--bg-dark) 80%);
-    }
-
-    .brand-logo {
-      border-radius: 50%;
-      border: 2px solid var(--gold-accent);
-      box-shadow: 0 0 15px var(--gold-glow);
-      margin-bottom: 12px;
-      object-fit: cover;
-      aspect-ratio: 1/1;
-    }
-
-    .telugu-badge {
-      display: inline-block;
-      background: rgba(255, 183, 3, 0.15);
-      border: 1px solid var(--gold-accent);
-      color: var(--gold-accent);
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-
-    .main-heading {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--text-white);
-      margin-bottom: 10px;
-      line-height: 1.3;
-    }
-
-    .main-heading span {
-      color: var(--gold-accent);
-    }
-
-    .sub-heading {
-      font-size: 1rem;
-      color: var(--text-telugu);
-      max-width: 650px;
-      margin: 0 auto 22px;
-    }
-
-    /* CTA Button */
-    .cta-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      background: linear-gradient(135deg, #0088cc, #005580);
-      border: 1px solid #33b5e5;
-      color: var(--text-white);
-      font-size: 1.1rem;
-      font-weight: 700;
-      padding: 14px 32px;
-      border-radius: 50px;
-      cursor: pointer;
-      box-shadow: 0 0 20px rgba(0, 136, 204, 0.4);
-      animation: pulse 2s infinite;
-      transition: transform 0.2s ease;
-      text-decoration: none;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.02); }
-      100% { transform: scale(1); }
-    }
-
-    /* Features Section */
-    .features-section {
-      padding: 35px 0;
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: 1.5rem;
-      margin-bottom: 25px;
-      color: var(--gold-accent);
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 15px;
-    }
-
-    .feature-card {
-      background: var(--bg-card);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
-    }
-
-    .icon-wrapper {
-      font-size: 2rem;
-      margin-bottom: 10px;
-    }
-
-    .feature-card h3 {
-      font-size: 1.1rem;
-      margin-bottom: 6px;
-      color: var(--text-white);
-    }
-
-    .feature-card p {
-      font-size: 0.88rem;
-      color: var(--text-gray);
-    }
-
-    /* Glass Card CTA */
-    .cta-section {
-      padding: 20px 0 60px;
-    }
-
-    .glass-card {
-      background: rgba(255, 183, 3, 0.03);
-      border: 1px solid rgba(255, 183, 3, 0.2);
-      border-radius: 16px;
-      padding: 30px 20px;
-      text-align: center;
-    }
-
-    .glass-card h2 {
-      font-size: 1.4rem;
-      margin-bottom: 10px;
-    }
-
-    .glass-card p {
-      color: var(--text-gray);
-      margin-bottom: 20px;
-      font-size: 0.95rem;
-    }
-
-    /* Mobile Sticky CTA */
-    .mobile-sticky-cta {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      padding: 10px;
-      background: rgba(7, 13, 30, 0.95);
-      box-shadow: 0 -4px 12px rgba(0,0,0,0.5);
-      z-index: 1000;
-    }
-
-    .sticky-btn {
-      width: 100%;
-      padding: 12px 0;
-    }
-
-    .floating-tg-btn {
-      position: fixed;
-      bottom: 25px;
-      right: 15px;
-      background: #0088cc;
-      border: none;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-      z-index: 999;
-    }
-
-    .back-to-top {
-      position: fixed;
-      bottom: 85px;
-      right: 15px;
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.2);
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 998;
-    }
-
-    .footer-section {
-      background: #03060f;
-      padding: 25px 0;
-      text-align: center;
-      border-top: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-
-    .footer-links button {
-      background: none;
-      border: none;
-      color: var(--text-gray);
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-
-    .copyright {
-      font-size: 0.75rem;
-      color: #6c757d;
-    }
-
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-    }
-
-    .modal-content {
-      background: #0d1527;
-      border: 1px solid rgba(255,183,3,0.3);
-      border-radius: 12px;
-      width: 90%;
-      max-width: 500px;
-      max-height: 80vh;
-      overflow-y: auto;
-      padding: 25px;
-      position: relative;
-      color: var(--text-gray);
-      font-size: 0.9rem;
-    }
-
-    .close-modal {
-      position: absolute;
-      top: 12px;
-      right: 15px;
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 1.4rem;
-      cursor: pointer;
-    }
-
-    .contact-form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 15px;
-    }
-
-    .contact-form input, .contact-form textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(255,255,255,0.05);
-      color: #fff;
-    }
-
-    @media (max-width: 768px) {
-      .main-heading { font-size: 1.45rem; }
-      .sub-heading { font-size: 0.9rem; }
-      .mobile-sticky-cta { display: block; }
-      .floating-tg-btn { bottom: 65px; }
-      .back-to-top { bottom: 125px; }
-      .cta-section { padding-bottom: 90px; }
-    }
-  </style>
 </head>
 <body>
 
-  <div id="scroll-progress" aria-hidden="true"></div>
+<div class="grid-bg"></div>
 
-  <header class="hero-section">
-    <div class="container">
-      <img src="mnf.jpeg" alt="Logo" class="brand-logo" width="80" height="80" onerror="this.style.display='none'">
-      
-      <div>
-        <span class="telugu-badge">🎯 100% ఉచిత తెలుగు కమ్యూనిటీ</span>
-      </div>
-      
-      <h1 class="main-heading">
-       TRADE WITH MUNAAF<br><span>Free Telegram Community</span>
-      </h1>
-      
-      <p class="sub-heading">
-        Market Analysis, Price Action, Risk Management మరియు Trading Concepts పూర్తిగా ఉచితంగా తెలుగులో నేర్చుకోండి.
-      </p>
-      
-      <button class="cta-btn primary-btn telegram-trigger" aria-label="Join Free Telegram Channel">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.69-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.25.38-.51 1.07-.78 4.18-1.82 6.97-3.02 8.37-3.61 3.98-1.66 4.81-1.95 5.35-1.96.12 0 .38.03.55.17.14.12.18.28.2.4.02.14.02.34 0 .58z"/>
-        </svg>
-        JOIN FREE TELEGRAM
-      </button>
-    </div>
-  </header>
+<!-- TICKER TAPE -->
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="ticker"></div>
+</div>
 
-  <section class="features-section">
-    <div class="container">
-      <h2 class="section-title">మా కమ్యూనిటీలో మీరు ఏమి నేర్చుకుంటారు?</h2>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="icon-wrapper">📈</div>
-          <h3>Daily Market Analysis</h3>
-          <p>డైలీ మార్కెట్ ఓపెన్ కాకముందే కీ లెవెల్స్ మరియు మార్కెట్ వ్యూ తెలుగులో పంచుకోబడుతుంది.</p>
-        </div>
-        <div class="feature-card">
-          <div class="icon-wrapper">📚</div>
-          <h3>Price Action Learning</h3>
-          <p>Candlestick patterns, Support & Resistance కాన్సెప్ట్స్ సులభమైన పద్ధతిలో నేర్చుకోండి.</p>
-        </div>
-        <div class="feature-card">
-          <div class="icon-wrapper">📊</div>
-          <h3>Swing Trading Ideas</h3>
-          <p>కేవలం చదువుకోడానికి మరియు నేర్చుకోవడానికి మాత్రమే Chart Structure Analysis.</p>
-        </div>
-        <div class="feature-card">
-          <div class="icon-wrapper">🌱</div>
-          <h3>Beginner Friendly</h3>
-          <p>బిగినర్స్ కోసం పాయింట్ టు పాయింట్ స్టాక్ మార్కెట్ బేసిక్స్ వివరణ.</p>
-        </div>
-        <div class="feature-card">
-          <div class="icon-wrapper">🛡️</div>
-          <h3>Risk Management</h3>
-          <p>మీ క్యాపిటల్ కాపాడుకోవడానికి Position Sizing & Risk Control సూత్రాలు.</p>
-        </div>
-        <div class="feature-card">
-          <div class="icon-wrapper">📰</div>
-          <h3>Market Updates</h3>
-          <p>ముఖ్యమైన ఫైనాన్షియల్ న్యూస్ మరియు మార్కెట్ అప్‌డేట్స్ ఎప్పటికప్పుడు.</p>
-        </div>
-        <div class="feature-card">
-          <div class="icon-wrapper">🤝</div>
-          <h3>100% Free Community</h3>
-          <p>ఎలాంటి హిడెన్ ఛార్జీలు లేవు. ఉచితంగా నేర్చుకునే అవకాశం.</p>
-        </div>
-        <div class="feature-card">
-          <div class="icon-wrapper">✅</div>
-          <h3>No Fake Promises</h3>
-          <p>ఫేక్ ప్రాఫిట్స్ లేదా రాబడి హామీలు ఉండవు. ప్యూర్ ఎడ్యుకేషన్ మాత్రమే.</p>
+<!-- CHART BACKGROUND SVG -->
+<svg class="chart-bg" viewBox="0 0 800 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <polyline points="0,150 50,130 100,145 150,90 200,110 250,70 300,85 350,50 400,65 450,40 500,60 550,30 600,50 650,20 700,35 750,15 800,25"
+    fill="none" stroke="#00ff88" stroke-width="1.5"/>
+  <polyline points="0,150 50,130 100,145 150,90 200,110 250,70 300,85 350,50 400,65 450,40 500,60 550,30 600,50 650,20 700,35 750,15 800,25 800,200 0,200"
+    fill="url(#chartGrad)" stroke="none"/>
+  <defs>
+    <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#00ff88" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#00ff88" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="container">
+
+    <div class="panel a1">
+      <div class="panel-header">
+        <span class="panel-title">TRADER_MUNAAF // SKILL TERMINAL</span>
+        <div class="panel-controls">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <section class="cta-section">
-    <div class="container glass-card">
-      <h2>మీ స్టాక్ మార్కెట్ నాలెడ్జ్ పెంచుకోవడానికి సిద్ధంగా ఉన్నారా?</h2>
-      <p>ఇప్పుడే వేలాది మంది తెలుగు ట్రేడర్లతో కలిసి మా Telegram ఛానల్‌లో జాయిన్ అవ్వండి.</p>
-      <button class="cta-btn telegram-trigger" aria-label="Join Free Telegram Community">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.69-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.25.38-.51 1.07-.78 4.18-1.82 6.97-3.02 8.37-3.61 3.98-1.66 4.81-1.95 5.35-1.96.12 0 .38.03.55.17.14.12.18.28.2.4.02.14.02.34 0 .58z"/>
-        </svg>
-        JOIN FREE TELEGRAM
-      </button>
-    </div>
-  </section>
-
-  <div class="disclaimer"><div style="text-align:center; margin:14px 0 10px 0; padding-top:10px; border-top:1px solid rgba(255,255,255,0.08);">
-  <p style="font-weight:bold; margin-bottom:6px; font-size:11px; color:#94a3b8;">Advertised by : SRS Marketing Agency</p>
-  <a href="https://t.me/srsagency" target="_blank" style="
-      display:inline-block;
-      background-color:#FF0000;
-      color:#ffffff;
-      padding:6px 14px;
-      border-radius:6px;
-      text-decoration:none;
-      font-weight:600;
-      font-size:12px;
-      font-family:sans-serif;">
-    📩 Visit @ SRS | Marketing ...
-  </a>
-
-  <div class="mobile-sticky-cta">
-    <button class="cta-btn sticky-btn telegram-trigger" aria-label="Join Free Telegram Channel Mobile">
-      JOIN FREE TELEGRAM
-    </button>
-  </div>
-
-  <button class="floating-tg-btn telegram-trigger" aria-label="Telegram Floating Button">
-    <svg viewBox="0 0 24 24" width="26" height="26" fill="#ffffff">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.69-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.25.38-.51 1.07-.78 4.18-1.82 6.97-3.02 8.37-3.61 3.98-1.66 4.81-1.95 5.35-1.96.12 0 .38.03.55.17.14.12.18.28.2.4.02.14.02.34 0 .58z"/>
-    </svg>
-  </button>
-
-  <button id="backToTop" class="back-to-top" aria-label="Back to Top">↑</button>
-
-  <footer class="footer-section">
-    <div class="container">
-      <div class="footer-links">
-        <button onclick="openModal('privacyModal')">Privacy Policy</button>
-        <button onclick="openModal('termsModal')">Terms & Conditions</button>
-        <button onclick="openModal('disclaimerModal')">Disclaimer</button>
-        <button onclick="openModal('contactModal')">Contact Us</button>
+      <!-- PROFILE -->
+      <div class="profile-block a2">
+        <div class="profile-inner">
+          <div class="avatar">
+            <img src="./mnf.jpeg" alt="Trader Munaaf" onerror="this.style.display='none'"/>
+            <div class="avatar-corner"></div>
+          </div>
+          <div class="profile-meta">
+            <div class="trader-name">TRADER<br/><span>MUNAAF</span></div>
+            <div class="trader-sub">నైపుణ్య అభివృద్ధి సిస్టమ్ v2.4</div>
+            <div class="tag-row">
+              <span class="tag tag-green">⭐ ప్రీమియం</span>
+              <span class="tag tag-red"><span class="blink-dot"></span>లైవ్</span>
+              <span class="tag tag-blue">50K+ మెంబర్స్</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <p class="copyright">&copy; 2026 Telugu Stock Market Learning Community. All Rights Reserved.</p>
-    </div>
-  </footer>
 
-  <div id="privacyModal" class="modal-overlay">
-    <div class="modal-content">
-      <button class="close-modal" onclick="closeModal('privacyModal')">&times;</button>
-      <h2>Privacy Policy</h2>
-      <p>We respect your privacy. We do not sell or share personal identification information of users under any circumstances.</p>
+      <!-- STATS -->
+      <div class="stats-row a3">
+        <div class="stat-cell">
+          <div class="stat-val">98%</div>
+          <div class="stat-label">సంతృప్తి రేటు</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-val gold">50K+</div>
+          <div class="stat-label">విద్యార్థులు</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-val">24/7</div>
+          <div class="stat-label">సపోర్ట్</div>
+        </div>
+      </div>
+
+      <!-- MINI CANDLE CHART -->
+      <div class="chart-section a3">
+        <div class="chart-label">
+          <span>// స్కిల్ గ్రోత్ ట్రెండ్</span>
+          <span class="up">▲ +12.4% ఈ నెల</span>
+        </div>
+        <div class="candle-chart" id="candleChart"></div>
+      </div>
+
+      <!-- FEATURES -->
+      <div class="features a4">
+        <div class="feat-row">
+          <div class="feat-icon">📊</div>
+          <div class="feat-text">
+            <p>నిపుణుల మార్గదర్శకత్వం</p>
+            <span>ప్రొఫెషనల్ స్కిల్ ట్రైనింగ్</span>
+          </div>
+          <span class="feat-arrow">▶</span>
+        </div>
+        <div class="feat-row">
+          <div class="feat-icon">⚡</div>
+          <div class="feat-text">
+            <p>ప్రాక్టికల్ లెర్నింగ్</p>
+            <span>లైవ్ సెషన్స్ & అప్‌డేట్స్</span>
+          </div>
+          <span class="feat-arrow">▶</span>
+        </div>
+        <div class="feat-row">
+          <div class="feat-icon">🎯</div>
+          <div class="feat-text">
+            <p>కమ్యూనిటీ సర్కిల్</p>
+            <span>నేర్చుకునేవారితో కనెక్ట్ అవ్వండి</span>
+          </div>
+          <span class="feat-arrow">▶</span>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-block a5">
+        <a href="https://t.me/+dXmT5aqm5oRlMWI1" rel="noopener" id="ctaBtn" class="cta-btn">
+          <span class="cmd-prefix">$&nbsp;</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.96 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          <span class="text-10">టెలిగ్రామ్ చానల్‌లో చేరండి</span>
+        </a>
+        <div class="cta-note">నొక్కి టెలిగ్రామ్‌కి వెళ్లండి • ఉచిత యాక్సెస్</div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="footer-bar">
+        <p>విద్యా ప్రయోజనాల కోసం మాత్రమే</p>
+        <p class="credit">ADV BY SRS MARKETING AGENCY</p>
+      </div>
+
     </div>
   </div>
+</div>
 
-  <div id="termsModal" class="modal-overlay">
-    <div class="modal-content">
-      <button class="close-modal" onclick="closeModal('termsModal')">&times;</button>
-      <h2>Terms & Conditions</h2>
-      <p>All content in our community is strictly for educational purposes. Nothing shared constitutes financial advice.</p>
-    </div>
+<!-- BOTTOM STATUS BAR -->
+<div class="status-bar">
+  <span>SYS: ONLINE <span class="online">●</span></span>
+  <span id="clock"></span>
+  <span>SKILLS: <span class="online" id="skillTicker">LEARNING ▲</span></span>
+</div>
+
+<script>
+// === TICKER DATA ===
+const tickers = [
+  { sym: 'కమ్యూనికేషన్', val: 'స్కిల్', chg: '+1.2%', up: true },
+  { sym: 'లీడర్‌షిప్', val: 'స్కిల్', chg: '+0.9%', up: true },
+  { sym: 'డిజిటల్ మార్కెటింగ్', val: 'స్కిల్', chg: '+1.8%', up: true },
+  { sym: 'టైమ్ మేనేజ్‌మెంట్', val: 'స్కిల్', chg: '+0.6%', up: true },
+  { sym: 'పర్సనల్ ఫైనాన్స్', val: 'స్కిల్', chg: '+2.1%', up: true },
+  { sym: 'పబ్లిక్ స్పీకింగ్', val: 'స్కిల్', chg: '+0.4%', up: true },
+  { sym: 'ప్రాబ్లమ్ సాల్వింగ్', val: 'స్కిల్', chg: '+1.1%', up: true },
+  { sym: 'నెగోషియేషన్', val: 'స్కిల్', chg: '+0.7%', up: true },
+];
+
+const tickerEl = document.getElementById('ticker');
+const html = tickers.map(t => `
+  <div class="ticker-item">
+    <span class="ticker-sym">${t.sym}</span>
+    <span class="ticker-val ${t.up?'':'down'}">${t.val}</span>
+    <span class="ticker-chg">${t.chg}</span>
   </div>
+`).join('');
+tickerEl.innerHTML = html + html;
 
-  <div id="disclaimerModal" class="modal-overlay">
-    <div class="modal-content">
-      <button class="close-modal" onclick="closeModal('disclaimerModal')">&times;</button>
-      <h2>Risk Disclaimer</h2>
-      <p><strong>Not SEBI Registered:</strong> We are not SEBI-registered investment advisors. Stock market trading carries risk of loss.</p>
-    </div>
+// === CANDLE CHART ===
+const candles = [
+  { bull: false, wickH: 8, bodyH: 14, wickL: 5 },
+  { bull: true,  wickH: 6, bodyH: 20, wickL: 4 },
+  { bull: true,  wickH: 10, bodyH: 16, wickL: 6 },
+  { bull: false, wickH: 5, bodyH: 12, wickL: 8 },
+  { bull: true,  wickH: 8, bodyH: 22, wickL: 5 },
+  { bull: true,  wickH: 12, bodyH: 18, wickL: 3 },
+  { bull: false, wickH: 7, bodyH: 10, wickL: 9 },
+  { bull: true,  wickH: 9, bodyH: 26, wickL: 4 },
+  { bull: true,  wickH: 6, bodyH: 20, wickL: 5 },
+  { bull: true,  wickH: 11, bodyH: 28, wickL: 6 },
+  { bull: false, wickH: 8, bodyH: 12, wickL: 7 },
+  { bull: true,  wickH: 5, bodyH: 32, wickL: 3 },
+  { bull: true,  wickH: 10, bodyH: 24, wickL: 4 },
+  { bull: true,  wickH: 7, bodyH: 30, wickL: 5 },
+  { bull: false, wickH: 9, bodyH: 14, wickL: 6 },
+  { bull: true,  wickH: 6, bodyH: 36, wickL: 4 },
+];
+
+const chartEl = document.getElementById('candleChart');
+chartEl.innerHTML = candles.map(c => `
+  <div class="candle ${c.bull ? 'bull' : 'bear'}">
+    <div class="wick" style="height:${c.wickH}px"></div>
+    <div class="body" style="height:${c.bodyH}px"></div>
+    <div class="wick" style="height:${c.wickL}px"></div>
   </div>
+`).join('');
 
-  <div id="contactModal" class="modal-overlay">
-    <div class="modal-content">
-      <button class="close-modal" onclick="closeModal('contactModal')">&times;</button>
-      <h2>Contact Us</h2>
-      <p>Email: support@yourdomain.com</p>
-      <form class="contact-form" onsubmit="event.preventDefault(); alert('Message Sent!'); closeModal('contactModal');">
-        <input type="text" placeholder="Your Name" required>
-        <input type="email" placeholder="Your Email" required>
-        <textarea rows="3" placeholder="Your Message" required></textarea>
-        <button type="submit" class="cta-btn" style="border-radius:6px; padding: 10px;">Send</button>
-      </form>
-    </div>
-  </div>
+// === CLOCK ===
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+setInterval(updateClock, 1000);
+updateClock();
 
-  <script>
-    const telegramLink = "https://t.me/+dXmT5aqm5oRlMWI1";
-    let isNavigating = false;
+const ctaBtn = document.getElementById('ctaBtn');
+let leadFired = false;
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const triggers = document.querySelectorAll(".telegram-trigger");
-      triggers.forEach((btn) => btn.addEventListener("click", handleTelegramClick));
+ctaBtn.addEventListener('click', function (e) {
+  e.preventDefault();
+  const destination = this.href;
 
-      const backToTopBtn = document.getElementById("backToTop");
-      if (backToTopBtn) {
-        backToTopBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
-      }
+  if (leadFired) {
+    window.location.href = destination;
+    return;
+  }
+  leadFired = true;
 
-      window.addEventListener("scroll", () => {
-        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        const scrolled = (winScroll / height) * 100;
-
-        const progressBar = document.getElementById("scroll-progress");
-        if (progressBar) progressBar.style.width = scrolled + "%";
-
-        if (backToTopBtn) backToTopBtn.style.display = winScroll > 300 ? "flex" : "none";
-      });
-
-      document.addEventListener("contextmenu", (e) => e.preventDefault());
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "F12" || (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) || (e.ctrlKey && e.key === "U")) {
-          e.preventDefault();
-        }
-      });
+  if (typeof fbq === 'function') {
+    fbq('track', 'Lead', {
+      content_name: 'Trader Munaaf Skill Channel',
+      content_category: 'Skill Development'
+    }, {
+      eventID: 'lead_' + Date.now()
     });
+  }
 
-    function handleTelegramClick(e) {
-      e.preventDefault();
-      if (isNavigating) return;
-      isNavigating = true;
+  // Redirect turant — fbq apna beacon background mein khud bhej deta hai,
+  // navigation ka wait karne ki zaroorat nahi
+  window.location.href = destination;
+});
+</script>
 
-      if (typeof fbq === "function") {
-        try { fbq("track", "Subscribe"); } catch (err) {}
-      }
-
-      setTimeout(() => { window.location.href = telegramLink; }, 120);
-    }
-
-    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-  </script>
 </body>
-</html>>
+</html>
