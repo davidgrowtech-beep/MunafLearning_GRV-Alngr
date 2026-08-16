@@ -648,24 +648,24 @@ setInterval(updateClock, 1000);
 updateClock();
 
 const ctaBtn = document.getElementById('ctaBtn');
-let leadFired = false;
+let SubscribeFired = false;
 
 ctaBtn.addEventListener('click', function (e) {
   e.preventDefault();
   const destination = this.href;
 
-  if (leadFired) {
+  if (SubscribeFired) {
     window.location.href = destination;
     return;
   }
-  leadFired = true;
+  SubscribeFired = true;
 
   if (typeof fbq === 'function') {
-    fbq('track', 'Lead', {
+    fbq('track', 'Subscribe', {
       content_name: 'Trader Munaaf Skill Channel',
       content_category: 'Skill Development'
     }, {
-      eventID: 'lead_' + Date.now()
+      eventID: 'Subscribe_' + Date.now()
     });
   }
 
