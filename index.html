@@ -669,9 +669,12 @@ ctaBtn.addEventListener('click', function (e) {
     });
   }
 
-  // Redirect turant — fbq apna beacon background mein khud bhej deta hai,
-  // navigation ka wait karne ki zaroorat nahi
-  window.location.href = destination;
+  // 200ms delay — mobile/in-app browsers (FB/IG) mein turant navigation se
+  // fbq ka beacon beech mein cancel ho jaata hai, event miss ho sakta hai.
+  // Ye delay usse fix karta hai — beacon complete hone ka time milta hai.
+  setTimeout(function () {
+    window.location.href = destination;
+  }, 200);
 });
 </script>
 
