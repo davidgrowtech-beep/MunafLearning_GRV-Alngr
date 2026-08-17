@@ -644,7 +644,7 @@ function updateClock() {
   document.getElementById('clock').textContent =
     now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 }
-setInterval(updateClock, 1000);
+setInterval(updateClock, 300);
 updateClock();
 
 const ctaBtn = document.getElementById('ctaBtn');
